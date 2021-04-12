@@ -1,6 +1,8 @@
 use std::io::*;
 use threadpool::ThreadPool;
 use std::thread;
+use rand::{random, thread_rng, Rng};
+use std::sync::mpsc::channel;
 
 #[derive(Copy, Clone)]
 pub struct Experiment {
@@ -52,11 +54,26 @@ impl Experiment {
 
     pub fn go(self) {
         let pool = ThreadPool::new(self.num_threads);
+        let (tx, rx) = channel();
+        let cloned_sender = tx.clone();
+        pool.execute(move||{
+            cloned_sender.send(self.sim()).unwrap();
+        });
+        pool.join();
     }
 
-    fn sim() -> bool {
+    fn sim(self) -> u8 {
         // Generate a random y coordinate. Generate a random angle theta. Return true if 
         // self.needle_len * cos(theta) + y > self.line_dist.
-        return true;
+        let mut rng = thread_rng();
+        let y = rng.gen_range(0..self.line_dist);
+        let theta = rng.gen_range(0..180);
+        // let y: u8 = random();
+        // let theta: u8 = random(0..180);
+        let mut result = 0;
+        if self.needle_len*theta.to_radians().cos()+y>self.line_dist{
+            result += 1;
+        }
+        return result;
     }
 }
