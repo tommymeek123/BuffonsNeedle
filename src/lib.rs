@@ -62,18 +62,25 @@ impl Experiment {
         pool.join();
     }
 
-    fn sim(self) -> u8 {
-        // Generate a random y coordinate. Generate a random angle theta. Return true if 
-        // self.needle_len * cos(theta) + y > self.line_dist.
+    // fn sim(self) -> u8 {
+    //     let mut rng = thread_rng();
+    //     let y = rng.gen_range(0..self.line_dist);
+    //     let theta = rng.gen_range(0..180);
+    //     // let y: u8 = random();
+    //     // let theta: u8 = random(0..180);
+    //     let mut result = 0;
+    //     if self.needle_len * theta.to_radians().sin()  + y > self.line_dist{
+    //         result += 1;
+    //     }
+    //     return result;
+    // }
+
+    fn sim(self) -> bool {
         let mut rng = thread_rng();
         let y = rng.gen_range(0..self.line_dist);
         let theta = rng.gen_range(0..180);
         // let y: u8 = random();
         // let theta: u8 = random(0..180);
-        let mut result = 0;
-        if self.needle_len*theta.to_radians().cos()+y>self.line_dist{
-            result += 1;
-        }
-        return result;
+        self.needle_len * theta.to_radians().sin() + y > self.line_dist
     }
 }
