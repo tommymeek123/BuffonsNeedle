@@ -1,19 +1,22 @@
 use std::io::*;
 use threadpool::ThreadPool;
 // use std::thread;
-use rand::rngs::SmallRng;
+//use rand::rngs::SmallRng;
+//use rand::{Rng,SeedableRng};
 use rand::prelude::*;
 use std::sync::mpsc::channel;
 
 #[derive(Copy, Clone)]
 pub struct Experiment {
-    pub needle_len: u8,
-    pub line_dist: u8,
+    pub needle_len: u32,
+    pub line_dist: u32,
     pub num_needles: u32,
     pub num_threads: usize,
 }
 
 impl Experiment {
+    pub const MAX_THREADS: u8 = 250;
+
     pub fn new() -> Self {
         Experiment {
             needle_len: 0,
@@ -29,14 +32,14 @@ impl Experiment {
         stdout().flush().expect("Failed to flush stdout.");
         let mut buf = String::new();
         stdin().read_line(&mut buf).expect("Failed to read user input.");
-        self.needle_len = buf.trim().parse::<u8>().expect("Failed to parse input.");
+        self.needle_len = buf.trim().parse::<u32>().expect("Failed to parse input.");
 
         // get line distance
         print!("Please enter the distance between the lines: ");
         stdout().flush().expect("Failed to flush stdout.");
         let mut buf = String::new();
         stdin().read_line(&mut buf).expect("Failed to read user input.");
-        self.line_dist = buf.trim().parse::<u8>().expect("Failed to parse input.");
+        self.line_dist = buf.trim().parse::<u32>().expect("Failed to parse input.");
 
         // get the number of needles
         print!("Please enter the total number of needles: ");
@@ -54,15 +57,20 @@ impl Experiment {
     }
 
     pub fn go(self) -> f32{
-        let mut hits: i32 = 0;
-        let mut misses: i32 = 0;
-        let mut rng = thread_rng();
-        let pool = ThreadPool::new(self.num_threads);
+        let mut hits: u32 = 0;
+        let mut misses: u32 = 0;
+        let mut rng = rand::thread_rng();
+        let pool = ThreadPool::new(self.MAX_THREADS);
         let (tx, rx) = channel();
         let cloned_sender = tx.clone();
+        let small_rng = SmallRng::from_rng(&mut rng).unwrap();
         // moving ownership of everything in the closure from the parent to the all threads in threadpool.
+        for i in range self.num_threads {
+
+        }
         pool.execute(move || {
-            let small_rng = SmallRng::from_rng(&mut rng).unwrap();
+            for i in range
+            //let small_rng = SmallRng::from_rng(&mut rng).unwrap();
             cloned_sender.send(self.sim(small_rng)).unwrap();
         });
         if rx.recv().unwrap(){
@@ -75,7 +83,7 @@ impl Experiment {
         //pool.join();
     }
 
-    fn calculate(self, hits: i32) -> f32{
+    fn calculate(self, hits: u32) -> f32{
         (2 * self.needle_len * self.num_needles / (self.line_dist * hits)) as f32
     }
 
