@@ -1,7 +1,7 @@
 use std::io::*;
 use threadpool::ThreadPool;
 use std::thread;
-use rand::{random, thread_rng, Rng};
+use rand::prelude::*;
 use std::sync::mpsc::channel;
 
 #[derive(Copy, Clone)]
@@ -56,10 +56,11 @@ impl Experiment {
         let pool = ThreadPool::new(self.num_threads);
         let (tx, rx) = channel();
         let cloned_sender = tx.clone();
-        pool.execute(move||{
+        // moving ownership of everything in the closure from the parent to the all threads in threadpool.
+        pool.execute(move || {
             cloned_sender.send(self.sim()).unwrap();
         });
-        pool.join();
+        //pool.join();
     }
 
     // fn sim(self) -> u8 {
@@ -75,7 +76,7 @@ impl Experiment {
     //     return result;
     // }
 
-    fn sim(self) -> bool {
+    fn sim(self, rng: SmallRng) -> bool {
         let mut rng = thread_rng();
         let y = rng.gen_range(0..self.line_dist);
         let theta = rng.gen_range(0..180);
