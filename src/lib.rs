@@ -1,6 +1,7 @@
 use std::io::*;
 use threadpool::ThreadPool;
-use std::thread;
+// use std::thread;
+use rand::rngs::SmallRng;
 use rand::prelude::*;
 use std::sync::mpsc::channel;
 
@@ -52,15 +53,30 @@ impl Experiment {
         self.num_threads = buf.trim().parse::<usize>().expect("Failed to parse input.");
     }
 
-    pub fn go(self) {
+    pub fn go(self) -> f32{
+        let mut hits: i32 = 0;
+        let mut misses: i32 = 0;
+        let mut rng = thread_rng();
         let pool = ThreadPool::new(self.num_threads);
         let (tx, rx) = channel();
         let cloned_sender = tx.clone();
         // moving ownership of everything in the closure from the parent to the all threads in threadpool.
         pool.execute(move || {
-            cloned_sender.send(self.sim()).unwrap();
+            let small_rng = SmallRng::from_rng(&mut rng).unwrap();
+            cloned_sender.send(self.sim(small_rng)).unwrap();
         });
+        if rx.recv().unwrap(){
+            hits += 1;
+        }else {
+            misses += 1;
+        }
+        debug_assert_eq!(hits + misses, self.num_needles);
+        self.calculate(hits)
         //pool.join();
+    }
+
+    fn calculate(self, hits: i32) -> f32{
+        (2 * self.needle_len * self.num_needles / (self.line_dist * hits)) as f32
     }
 
     // fn sim(self) -> u8 {
@@ -77,7 +93,6 @@ impl Experiment {
     // }
 
     fn sim(self, rng: SmallRng) -> bool {
-        let mut rng = thread_rng();
         let y = rng.gen_range(0..self.line_dist);
         let theta = rng.gen_range(0..180);
         // let y: u8 = random();

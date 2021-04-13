@@ -7,6 +7,7 @@ use crate::lib::Experiment;
 fn main() {
     let mut exp = Experiment::new();
     exp.input();
-    exp.go();
+    let result = exp.go();
+    println!("Estimated value of pi: {}", result);
     // println!("needle length: {}, line width: {}, num needles: {}, num threads: {}", exp.needle_len, exp.line_dist, exp.num_needles, exp.num_threads);
 }
