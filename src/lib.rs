@@ -15,7 +15,7 @@ pub struct Experiment {
 }
 
 impl Experiment {
-    pub const MAX_THREADS: u8 = 250;
+    pub const MAX_THREADS: usize = 250;
 
     pub fn new() -> Self {
         Experiment {
@@ -56,15 +56,15 @@ impl Experiment {
         self.num_threads = buf.trim().parse::<usize>().expect("Failed to parse input.");
     }
 
-    pub fn go(self) -> f32{
+    pub fn go(self) -> f32 {
         let mut hits: u32 = 0;
         let mut misses: u32 = 0;
         let mut rng = rand::thread_rng();
-        let pool = ThreadPool::new(self.MAX_THREADS);
+        let pool = ThreadPool::new(Experiment::MAX_THREADS);
         let (tx, rx) = channel();
         let cloned_sender = tx.clone();
         let small_rng = SmallRng::from_rng(&mut rng).unwrap();
-        // moving ownership of everything in the closure from the parent to the all threads in threadpool.
+        // moving ownership of everything in the closure from the parent to all threads in threadpool.
         for i in range self.num_threads {
 
         }
@@ -73,7 +73,7 @@ impl Experiment {
             //let small_rng = SmallRng::from_rng(&mut rng).unwrap();
             cloned_sender.send(self.sim(small_rng)).unwrap();
         });
-        if rx.recv().unwrap(){
+        if rx.recv().unwrap() {
             hits += 1;
         }else {
             misses += 1;
@@ -83,7 +83,7 @@ impl Experiment {
         //pool.join();
     }
 
-    fn calculate(self, hits: u32) -> f32{
+    fn calculate(self, hits: u32) -> f32 {
         (2 * self.needle_len * self.num_needles / (self.line_dist * hits)) as f32
     }
 

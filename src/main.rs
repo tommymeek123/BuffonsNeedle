@@ -1,9 +1,10 @@
-pub mod lib;
-use crate::lib::Experiment;
-
 #[allow(unused_imports)]
 #[allow(dead_code)]
 #[allow(unused_variables)]
+
+pub mod lib;
+use crate::lib::Experiment;
+
 fn main() {
     let mut exp = Experiment::new();
     exp.input();
