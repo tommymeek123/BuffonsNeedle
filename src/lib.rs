@@ -67,38 +67,77 @@ impl Experiment {
 
     /// Prompts the user for the length of the needles and sets the field accordingly.
     fn get_needle_len(&mut self) {
-        print!("Please enter the length of the needles: ");
-        stdout().flush().expect("Failed to flush stdout.");
-        let mut buf = String::new();
-        stdin().read_line(&mut buf).expect("Failed to read user input.");
-        self.needle_len = buf.trim().parse::<f64>().expect("Failed to parse input.");
+        while self.needle_len == 0.0 {
+            print!("Please enter the length of the needles: ");
+            stdout().flush().expect("Failed to flush stdout.");
+            let mut buf = String::new();
+            stdin().read_line(&mut buf).expect("Failed to read user input.");
+            if let Ok(temp_len) = buf.trim().parse::<f64>(){
+                if temp_len > 0.0{
+                    self.needle_len = temp_len;
+                }else {
+                    println!("Needle length needs to be positive.")
+                }
+            }else{
+                println!("Failed to parse input.");
+            }
+        }
     }
 
     /// Prompts the user for the distance between the lines and sets the field accordingly.
     fn get_line_dist(&mut self) {
-        print!("Please enter the distance between the lines: ");
-        stdout().flush().expect("Failed to flush stdout.");
-        let mut buf = String::new();
-        stdin().read_line(&mut buf).expect("Failed to read user input.");
-        self.line_dist = buf.trim().parse::<f64>().expect("Failed to parse input.");
+        while self.line_dist == 0.0{
+            print!("Please enter the distance between the lines: ");
+            stdout().flush().expect("Failed to flush stdout.");
+            let mut buf = String::new();
+            stdin().read_line(&mut buf).expect("Failed to read user input.");
+            if let Ok(temp_dist) = buf.trim().parse::<f64>(){
+                if temp_dist > self.needle_len{
+                    self.line_dist = temp_dist;
+                }else {
+                    println!("Line distance needs to be greater than needle length.")
+                }
+            }else{
+                println!("Failed to parse input.");
+            }
+        }
     }
 
     /// Prompts the user for the number of needles and sets the field accordingly.
     fn get_num_needles(&mut self) {
-        print!("Please enter the total number of needles: ");
-        stdout().flush().expect("Failed to flush stdout.");
-        let mut buf = String::new();
-        stdin().read_line(&mut buf).expect("Failed to read user input.");
-        self.num_needles = buf.trim().parse::<u64>().expect("Failed to parse input.");
+        while self.num_needles == 0 {
+            print!("Please enter the total number of needles: ");
+            stdout().flush().expect("Failed to flush stdout.");
+            let mut buf = String::new();
+            stdin().read_line(&mut buf).expect("Failed to read user input.");
+            if let Ok(temp_needles) = buf.trim().parse::<u64>(){
+                if temp_needles == 0{
+                    println!("Expected positive integer.");
+                }
+                self.num_needles = temp_needles;
+            }else {
+                println!("Failed to parse. Expected positive integer.");
+            }
+        }
     }
 
     /// Prompts the user for the number of threads and sets the field accordingly.
     fn get_num_threads(&mut self) {
-        print!("Please enter the number of threads: ");
-        stdout().flush().expect("Failed to flush stdout.");
-        let mut buf = String::new();
-        stdin().read_line(&mut buf).expect("Failed to read user input.");
-        self.num_threads = buf.trim().parse::<usize>().expect("Failed to parse input.");
+        while self.num_threads == 0 {
+            print!("Please enter the number of threads: ");
+            stdout().flush().expect("Failed to flush stdout.");
+            let mut buf = String::new();
+            stdin().read_line(&mut buf).expect("Failed to read user input.");
+            if let Ok(temp_threads) = buf.trim().parse::<usize>(){
+                if temp_threads == 0{
+                    println!("Expected positive integer.");
+                }
+                self.num_threads = temp_threads;
+            }else {
+                println!("Failed to parse. Expected positive integer.");
+            }
+        }
+
     }
 
     /// This method activates the experiment. 
