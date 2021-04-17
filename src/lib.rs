@@ -129,15 +129,15 @@ impl Experiment {
             let mut buf = String::new();
             stdin().read_line(&mut buf).expect("Failed to read user input.");
             if let Ok(temp_threads) = buf.trim().parse::<usize>(){
-                if temp_threads == 0{
-                    println!("Expected positive integer.");
+                if 0 < temp_threads && temp_threads < self.num_needles as usize{
+                    self.num_threads = temp_threads;
+                }else{
+                    println!("Number of threads needs to be greater than 0 and less than number of needles.");
                 }
-                self.num_threads = temp_threads;
             }else {
                 println!("Failed to parse. Expected positive integer.");
             }
         }
-
     }
 
     /// This method activates the experiment. 
