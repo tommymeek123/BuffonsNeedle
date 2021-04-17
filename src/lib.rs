@@ -174,7 +174,7 @@ impl Experiment {
             hits += result;
         }
         if hits == 0 {
-            println!("No needles crossed the lines. Try dropping more needles.")
+            println!("No needles crossed the lines. Try dropping more needles.");
         }
         self.calculate(hits)
     }
