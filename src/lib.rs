@@ -6,7 +6,7 @@
 //! needle will lie across a line between two strips?"
 //!
 //! The answer the the problem, assuming that the needles are no longer than the width of the wooden
-//! strips is (2*l) / (pi*w) where l is the length of the needles and w is the width of the wooden
+//! strips is (2\*l) / (pi\*w) where l is the length of the needles and w is the width of the wooden
 //! strips. This simulation can be used to approximate the value of pi.
 //!
 //! Western Carolina University\
