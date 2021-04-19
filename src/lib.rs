@@ -205,7 +205,7 @@ impl Experiment {
     ///
     /// Returns the number of needles that ended up crossing a line.
     fn sim(self, rng: &mut SmallRng) -> u64 {
-        //println!("THREAD ID: {:?}", thread::current().id());
+        //println!("THREAD ID: {:?}", thread::current().id()); // <<< THIS IS TO PROVE WE ARE RUNNING CONCURRENTLY.
         let mut hits: u64 = 0;
 
         // Each iteration of this loop represents a single needle being dropped.
