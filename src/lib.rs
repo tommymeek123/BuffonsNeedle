@@ -19,6 +19,7 @@ use rand::prelude::*;
 use std::io::{stdin, stdout, Write};
 use std::sync::mpsc::channel;
 use threadpool::ThreadPool;
+//use std::thread;
 
 /// A struct for performing an experiment to find the value of pi.
 #[derive(Copy, Clone)]
@@ -204,6 +205,7 @@ impl Experiment {
     ///
     /// Returns the number of needles that ended up crossing a line.
     fn sim(self, rng: &mut SmallRng) -> u64 {
+        //println!("THREAD ID: {:?}", thread::current().id());
         let mut hits: u64 = 0;
 
         // Each iteration of this loop represents a single needle being dropped.
