@@ -19,7 +19,6 @@ use rand::prelude::*;
 use std::io::{stdin, stdout, Write};
 use std::sync::mpsc::channel;
 use threadpool::ThreadPool;
-//use std::thread;
 
 /// A struct for performing an experiment to find the value of pi.
 #[derive(Copy, Clone)]
